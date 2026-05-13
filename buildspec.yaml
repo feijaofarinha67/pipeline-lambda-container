@@ -15,17 +15,14 @@ phases:
 
       - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
 
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION |
-        docker login --username AWS --password-stdin \
-        $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 
   build:
     commands:
       - echo Build da imagem...
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
 
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG \
-        $REPOSITORY_URI:$IMAGE_TAG
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
 
   post_build:
     commands:
@@ -35,9 +32,7 @@ phases:
       - echo Atualizando Lambda...
 
       - |
-        aws lambda update-function-code \
-          --function-name $FUNCTION_NAME \
-          --image-uri $REPOSITORY_URI:$IMAGE_TAG
+        aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $REPOSITORY_URI:$IMAGE_TAG
 
 artifacts:
   files:
