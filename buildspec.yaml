@@ -4,7 +4,7 @@ env:
   variables:
     AWS_DEFAULT_REGION: us-east-1
     IMAGE_REPO_NAME: teste-pipe
-    IMAGE_TAG: v1.0
+    IMAGE_TAG: v2.0
     FUNCTION_NAME: teste
 
 phases:
